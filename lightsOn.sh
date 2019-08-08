@@ -38,7 +38,7 @@
 # If you use this feature, make sure you use the name of the binary of the
 # program (which may exist, for instance, in /usr/bin).
 
-# VERSION=v0.1
+# VERSION=v0.2
 
 # DEBUG=0 for no output
 # DEBUG=1 for sleep prints
@@ -72,6 +72,7 @@ yandexBrowser_html5_flash_detection=1
 epiphany_html5_detection=1
 webkit_flash_detection=1
 minitube_detection=1
+kodi_detection=1
 
 # Names of programs which, when running, you wish to delay the screensaver.
 # For example ('ardour2' 'gmpc').
@@ -397,6 +398,14 @@ isAppRunning()
                 log "isAppRunning(): mplayer fullscreen detected"
                 return 1
             fi
+        fi
+    fi
+
+    # Check if user want to detect Kodi.
+    if [ $kodi_detection == 1 ]; then
+        if [ "$(pidof -s kodi-x11)" ]; then
+            log "isAppRunning(): kodi detected"
+            return 1
         fi
     fi
 
