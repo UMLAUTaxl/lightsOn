@@ -97,7 +97,7 @@ X11ScreenSaver_Timeout=600
 
 # xfce4-power-manager control
 # If you don't want to change these settings, modify xfce4powermanager_control to 0.
-xfce4powermanager_control=0
+xfce4powermanager_control=1
 
 
 # YOU SHOULD NOT NEED TO MODIFY ANYTHING BELOW THIS LINE
@@ -205,15 +205,15 @@ checkFullscreen()
     for display in $displays
     do
         # Get id of active window and clean output
-        activ_win_id=$(xprop -root _NET_CLIENT_LIST_STACKING | sed 's/.*\, //')
+        activ_win_id=$(DISPLAY=:${display} xprop -root _NET_CLIENT_LIST_STACKING | sed 's/.*\, //')
         # Previously used _NET_ACTIVE_WINDOW, but it didn't work with some flash
         # players (eg. Twitch.tv) in firefox. Using sed because id lengths can vary.
 
         # Check if active window is in fullscreen or above state.
         if [[ -n $activ_win_id ]]; then
-            isActivWinFullscreen=$(xprop -id $activ_win_id | grep -c _NET_WM_STATE_FULLSCREEN)
+            isActivWinFullscreen=$(DISPLAY=:${display} xprop -id $activ_win_id | grep -c _NET_WM_STATE_FULLSCREEN)
             # Above state is used in some window managers instead of fullscreen.
-            isActivWinAbove=$(xprop -id $activ_win_id | grep -c _NET_WM_STATE_ABOVE)            
+            isActivWinAbove=$(DISPLAY=:${display} xprop -id $activ_win_id | grep -c _NET_WM_STATE_ABOVE)
             log "checkFullscreen(): Display: $display isFullScreen=$isActivWinFullscreen"
             log "checkFullscreen(): Display: $display isAbove=$isActivWinAbove"
             if [[ "$isActivWinFullscreen" -ge 1 || "$isActivWinAbove" -ge 1 ]]; then
